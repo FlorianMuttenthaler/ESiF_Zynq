@@ -1,7 +1,7 @@
 --Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
 --Tool Version: Vivado v.2018.3 (win64) Build 2405991 Thu Dec  6 23:38:27 MST 2018
---Date        : Tue May 14 19:40:16 2019
+--Date        : Tue May 14 20:29:06 2019
 --Host        : DESKTOP-8PEEVNN running 64-bit major release  (build 9200)
 --Command     : generate_target zynq.bd
 --Design      : zynq
@@ -609,13 +609,6 @@ entity zynq is
 end zynq;
 
 architecture STRUCTURE of zynq is
-  component zynq_pwm_module_0_0 is
-  port (
-    clk : in STD_LOGIC;
-    duty_cycles : in STD_LOGIC_VECTOR ( 31 downto 0 );
-    pwm : out STD_LOGIC_VECTOR ( 7 downto 0 )
-  );
-  end component zynq_pwm_module_0_0;
   component zynq_processing_system7_0_3 is
   port (
     TTC0_WAVE0_OUT : out STD_LOGIC;
@@ -710,7 +703,7 @@ architecture STRUCTURE of zynq is
     s_axi_rvalid : out STD_LOGIC;
     s_axi_rready : in STD_LOGIC;
     gpio_io_i : in STD_LOGIC_VECTOR ( 7 downto 0 );
-    gpio2_io_o : out STD_LOGIC_VECTOR ( 7 downto 0 )
+    gpio2_io_o : out STD_LOGIC_VECTOR ( 31 downto 0 )
   );
   end component zynq_axi_gpio_0_6;
   component zynq_rst_ps7_0_100M_3 is
@@ -727,8 +720,15 @@ architecture STRUCTURE of zynq is
     peripheral_aresetn : out STD_LOGIC_VECTOR ( 0 to 0 )
   );
   end component zynq_rst_ps7_0_100M_3;
+  component zynq_pwm_module_0_0 is
+  port (
+    clk : in STD_LOGIC;
+    duty_cycles : in STD_LOGIC_VECTOR ( 31 downto 0 );
+    pwm : out STD_LOGIC_VECTOR ( 7 downto 0 )
+  );
+  end component zynq_pwm_module_0_0;
   signal axi_gpio_0_GPIO_TRI_I : STD_LOGIC_VECTOR ( 7 downto 0 );
-  signal axi_gpio_0_gpio2_io_o : STD_LOGIC_VECTOR ( 7 downto 0 );
+  signal axi_gpio_0_gpio2_io_o : STD_LOGIC_VECTOR ( 31 downto 0 );
   signal processing_system7_0_DDR_ADDR : STD_LOGIC_VECTOR ( 14 downto 0 );
   signal processing_system7_0_DDR_BA : STD_LOGIC_VECTOR ( 2 downto 0 );
   signal processing_system7_0_DDR_CAS_N : STD_LOGIC;
@@ -814,7 +814,6 @@ architecture STRUCTURE of zynq is
   signal NLW_processing_system7_0_TTC0_WAVE2_OUT_UNCONNECTED : STD_LOGIC;
   signal NLW_processing_system7_0_USB0_VBUS_PWRSELECT_UNCONNECTED : STD_LOGIC;
   signal NLW_processing_system7_0_USB0_PORT_INDCTL_UNCONNECTED : STD_LOGIC_VECTOR ( 1 downto 0 );
-  signal NLW_pwm_module_0_duty_cycles_UNCONNECTED : STD_LOGIC_VECTOR ( 31 downto 8 );
   signal NLW_rst_ps7_0_100M_mb_reset_UNCONNECTED : STD_LOGIC;
   signal NLW_rst_ps7_0_100M_bus_struct_reset_UNCONNECTED : STD_LOGIC_VECTOR ( 0 to 0 );
   signal NLW_rst_ps7_0_100M_interconnect_aresetn_UNCONNECTED : STD_LOGIC_VECTOR ( 0 to 0 );
@@ -850,7 +849,7 @@ begin
   axi_gpio_0_GPIO_TRI_I(7 downto 0) <= sws_8bits_tri_i(7 downto 0);
 axi_gpio_0: component zynq_axi_gpio_0_6
      port map (
-      gpio2_io_o(7 downto 0) => axi_gpio_0_gpio2_io_o(7 downto 0),
+      gpio2_io_o(31 downto 0) => axi_gpio_0_gpio2_io_o(31 downto 0),
       gpio_io_i(7 downto 0) => axi_gpio_0_GPIO_TRI_I(7 downto 0),
       s_axi_aclk => processing_system7_0_FCLK_CLK0,
       s_axi_araddr(8 downto 0) => ps7_0_axi_periph_M00_AXI_ARADDR(8 downto 0),
@@ -1010,8 +1009,7 @@ ps7_0_axi_periph: entity work.zynq_ps7_0_axi_periph_3
 pwm_module_0: component zynq_pwm_module_0_0
      port map (
       clk => processing_system7_0_FCLK_CLK0,
-      duty_cycles(31 downto 8) => NLW_pwm_module_0_duty_cycles_UNCONNECTED(31 downto 8),
-      duty_cycles(7 downto 0) => axi_gpio_0_gpio2_io_o(7 downto 0),
+      duty_cycles(31 downto 0) => axi_gpio_0_gpio2_io_o(31 downto 0),
       pwm(7 downto 0) => pwm_module_0_pwm(7 downto 0)
     );
 rst_ps7_0_100M: component zynq_rst_ps7_0_100M_3

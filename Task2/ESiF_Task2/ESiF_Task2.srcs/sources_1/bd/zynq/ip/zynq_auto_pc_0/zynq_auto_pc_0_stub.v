@@ -3,8 +3,8 @@
 // Tool Version: Vivado v.2018.3 (win64) Build 2405991 Thu Dec  6 23:38:27 MST 2018
 // Date        : Tue May 14 19:42:48 2019
 // Host        : DESKTOP-8PEEVNN running 64-bit major release  (build 9200)
-// Command     : write_verilog -force -mode synth_stub
-//               c:/GIT/ESiF_Zynq/Task2/ESiF_Task2/ESiF_Task2.srcs/sources_1/bd/zynq/ip/zynq_auto_pc_0/zynq_auto_pc_0_stub.v
+// Command     : write_verilog -force -mode synth_stub -rename_top zynq_auto_pc_0 -prefix
+//               zynq_auto_pc_0_ zynq_auto_pc_0_stub.v
 // Design      : zynq_auto_pc_0
 // Purpose     : Stub declaration of top-level module interface
 // Device      : xc7z020clg484-1

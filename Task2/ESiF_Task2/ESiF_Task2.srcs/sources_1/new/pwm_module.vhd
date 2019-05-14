@@ -21,6 +21,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use ieee.numeric_std.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -38,8 +39,25 @@ entity pwm_module is
 end pwm_module;
 
 architecture Behavioral of pwm_module is
-
+    constant COUNT_MAX : integer := 8;
 begin
+
+    count_proc: process (clk)
+    variable count: integer := 0;
+    begin
+        if rising_edge(clk) then
+            if (count < COUNT_MAX) then
+                if (count <= to_integer(unsigned(duty_cycles))) then
+                    pwm <= "11111111";
+                else
+                    pwm <= "00000000";
+                end if;
+                count := (count + 1);
+            else
+                count := 0;
+            end if;
+        end if;
+    end process count_proc;
 
 
 end Behavioral;

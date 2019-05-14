@@ -3,6 +3,7 @@ vlib riviera
 
 vlib riviera/xilinx_vip
 vlib riviera/xil_defaultlib
+vlib riviera/xpm
 vlib riviera/axi_infrastructure_v1_1_0
 vlib riviera/axi_vip_v1_1_4
 vlib riviera/processing_system7_vip_v1_0_6
@@ -19,6 +20,7 @@ vlib riviera/axi_protocol_converter_v2_1_18
 
 vmap xilinx_vip riviera/xilinx_vip
 vmap xil_defaultlib riviera/xil_defaultlib
+vmap xpm riviera/xpm
 vmap axi_infrastructure_v1_1_0 riviera/axi_infrastructure_v1_1_0
 vmap axi_vip_v1_1_4 riviera/axi_vip_v1_1_4
 vmap processing_system7_vip_v1_0_6 riviera/processing_system7_vip_v1_0_6
@@ -43,6 +45,13 @@ vlog -work xilinx_vip  -sv2k12 "+incdir+C:/Xilinx/Vivado/2018.3/data/xilinx_vip/
 "C:/Xilinx/Vivado/2018.3/data/xilinx_vip/hdl/axi_vip_if.sv" \
 "C:/Xilinx/Vivado/2018.3/data/xilinx_vip/hdl/clk_vip_if.sv" \
 "C:/Xilinx/Vivado/2018.3/data/xilinx_vip/hdl/rst_vip_if.sv" \
+
+vlog -work xil_defaultlib  -sv2k12 "+incdir+../../../../ESiF_Task2.srcs/sources_1/bd/zynq/ipshared/ec67/hdl" "+incdir+../../../../ESiF_Task2.srcs/sources_1/bd/zynq/ipshared/70cf/hdl" "+incdir+../../../../ESiF_Task2.srcs/sources_1/bd/zynq/ip/zynq_processing_system7_0_3" "+incdir+C:/Xilinx/Vivado/2018.3/data/xilinx_vip/include" \
+"C:/Xilinx/Vivado/2018.3/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv" \
+"C:/Xilinx/Vivado/2018.3/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv" \
+
+vcom -work xpm -93 \
+"C:/Xilinx/Vivado/2018.3/data/ip/xpm/xpm_VCOMP.vhd" \
 
 vcom -work xil_defaultlib -93 \
 "../../../bd/zynq/ip/zynq_pwm_module_0_0/sim/zynq_pwm_module_0_0.vhd" \
@@ -79,6 +88,7 @@ vcom -work proc_sys_reset_v5_0_13 -93 \
 
 vcom -work xil_defaultlib -93 \
 "../../../bd/zynq/ip/zynq_rst_ps7_0_100M_3/sim/zynq_rst_ps7_0_100M_3.vhd" \
+"../../../bd/zynq/sim/zynq.vhd" \
 
 vlog -work generic_baseblocks_v2_1_0  -v2k5 "+incdir+../../../../ESiF_Task2.srcs/sources_1/bd/zynq/ipshared/ec67/hdl" "+incdir+../../../../ESiF_Task2.srcs/sources_1/bd/zynq/ipshared/70cf/hdl" "+incdir+../../../../ESiF_Task2.srcs/sources_1/bd/zynq/ip/zynq_processing_system7_0_3" "+incdir+C:/Xilinx/Vivado/2018.3/data/xilinx_vip/include" \
 "../../../../ESiF_Task2.srcs/sources_1/bd/zynq/ipshared/b752/hdl/generic_baseblocks_v2_1_vl_rfs.v" \
@@ -103,9 +113,6 @@ vlog -work axi_protocol_converter_v2_1_18  -v2k5 "+incdir+../../../../ESiF_Task2
 
 vlog -work xil_defaultlib  -v2k5 "+incdir+../../../../ESiF_Task2.srcs/sources_1/bd/zynq/ipshared/ec67/hdl" "+incdir+../../../../ESiF_Task2.srcs/sources_1/bd/zynq/ipshared/70cf/hdl" "+incdir+../../../../ESiF_Task2.srcs/sources_1/bd/zynq/ip/zynq_processing_system7_0_3" "+incdir+C:/Xilinx/Vivado/2018.3/data/xilinx_vip/include" \
 "../../../bd/zynq/ip/zynq_auto_pc_0/sim/zynq_auto_pc_0.v" \
-
-vcom -work xil_defaultlib -93 \
-"../../../bd/zynq/sim/zynq.vhd" \
 
 vlog -work xil_defaultlib \
 "glbl.v"

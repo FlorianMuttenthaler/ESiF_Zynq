@@ -9,6 +9,13 @@
   "C:/Xilinx/Vivado/2018.3/data/xilinx_vip/hdl/clk_vip_if.sv" \
   "C:/Xilinx/Vivado/2018.3/data/xilinx_vip/hdl/rst_vip_if.sv" \
 -endlib
+-makelib ies_lib/xil_defaultlib -sv \
+  "C:/Xilinx/Vivado/2018.3/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv" \
+  "C:/Xilinx/Vivado/2018.3/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv" \
+-endlib
+-makelib ies_lib/xpm \
+  "C:/Xilinx/Vivado/2018.3/data/ip/xpm/xpm_VCOMP.vhd" \
+-endlib
 -makelib ies_lib/xil_defaultlib \
   "../../../bd/zynq/ip/zynq_pwm_module_0_0/sim/zynq_pwm_module_0_0.vhd" \
 -endlib
@@ -44,6 +51,7 @@
 -endlib
 -makelib ies_lib/xil_defaultlib \
   "../../../bd/zynq/ip/zynq_rst_ps7_0_100M_3/sim/zynq_rst_ps7_0_100M_3.vhd" \
+  "../../../bd/zynq/sim/zynq.vhd" \
 -endlib
 -makelib ies_lib/generic_baseblocks_v2_1_0 \
   "../../../../ESiF_Task2.srcs/sources_1/bd/zynq/ipshared/b752/hdl/generic_baseblocks_v2_1_vl_rfs.v" \
@@ -68,9 +76,6 @@
 -endlib
 -makelib ies_lib/xil_defaultlib \
   "../../../bd/zynq/ip/zynq_auto_pc_0/sim/zynq_auto_pc_0.v" \
--endlib
--makelib ies_lib/xil_defaultlib \
-  "../../../bd/zynq/sim/zynq.vhd" \
 -endlib
 -makelib ies_lib/xil_defaultlib \
   glbl.v
