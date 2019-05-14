@@ -1,0 +1,6 @@
+15:01:07 INFO  : Registering command handlers for SDK TCF services
+15:01:07 INFO  : Launching XSCT server: xsct.bat -interactive C:\GIT\ESiF_Zynq\Task1\ESiF_Task1\ESiF_Task1.sdk\temp_xsdb_launch_script.tcl
+15:01:09 INFO  : XSCT server has started successfully.
+15:01:11 INFO  : Successfully done setting XSCT server connection channel  
+15:01:11 INFO  : Successfully done setting SDK workspace  
+15:01:11 INFO  : Processing command line option -hwspec C:/GIT/ESiF_Zynq/Task1/ESiF_Task1/ESiF_Task1.sdk/zynq_wrapper.hdf.
