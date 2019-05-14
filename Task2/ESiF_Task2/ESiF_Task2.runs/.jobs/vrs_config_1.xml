@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<Runs Version="1" Minor="0">
+	<Run Id="zynq_pwm_module_0_0_synth_1" LaunchDir="C:/GIT/ESiF_Zynq/Task2/ESiF_Task2/ESiF_Task2.runs/zynq_pwm_module_0_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="zynq_processing_system7_0_3_synth_1" LaunchDir="C:/GIT/ESiF_Zynq/Task2/ESiF_Task2/ESiF_Task2.runs/zynq_processing_system7_0_3_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="zynq_axi_gpio_0_6_synth_1" LaunchDir="C:/GIT/ESiF_Zynq/Task2/ESiF_Task2/ESiF_Task2.runs/zynq_axi_gpio_0_6_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="zynq_rst_ps7_0_100M_3_synth_1" LaunchDir="C:/GIT/ESiF_Zynq/Task2/ESiF_Task2/ESiF_Task2.runs/zynq_rst_ps7_0_100M_3_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="zynq_auto_pc_0_synth_1" LaunchDir="C:/GIT/ESiF_Zynq/Task2/ESiF_Task2/ESiF_Task2.runs/zynq_auto_pc_0_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Parameters>
+		<Parameter Name="runs.monitorLSFJobs" Val="true" Type="bool"/>
+	</Parameters>
+</Runs>
+
