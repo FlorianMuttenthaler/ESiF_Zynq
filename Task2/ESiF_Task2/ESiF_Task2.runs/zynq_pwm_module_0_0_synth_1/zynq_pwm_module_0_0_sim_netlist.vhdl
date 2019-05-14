@@ -1,7 +1,7 @@
 -- Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2018.3 (win64) Build 2405991 Thu Dec  6 23:38:27 MST 2018
--- Date        : Tue May 14 20:29:44 2019
+-- Date        : Tue May 14 21:27:03 2019
 -- Host        : DESKTOP-8PEEVNN running 64-bit major release  (build 9200)
 -- Command     : write_vhdl -force -mode funcsim -rename_top decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix -prefix
 --               decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_ zynq_pwm_module_0_0_sim_netlist.vhdl
@@ -670,7 +670,7 @@ begin
       CO(2) => \pwm0__14_carry_n_1\,
       CO(1) => \pwm0__14_carry_n_2\,
       CO(0) => \pwm0__14_carry_n_3\,
-      CYINIT => '1',
+      CYINIT => '0',
       DI(3) => \pwm0__14_carry_i_1_n_0\,
       DI(2) => \pwm0__14_carry_i_2_n_0\,
       DI(1) => \pwm0__14_carry_i_3_n_0\,

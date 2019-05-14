@@ -47,7 +47,7 @@ begin
     begin
         if rising_edge(clk) then
             if (count < COUNT_MAX) then
-                if (count <= to_integer(unsigned(duty_cycles))) then
+                if (count < to_integer(unsigned(duty_cycles))) then
                     pwm <= "11111111";
                 else
                     pwm <= "00000000";

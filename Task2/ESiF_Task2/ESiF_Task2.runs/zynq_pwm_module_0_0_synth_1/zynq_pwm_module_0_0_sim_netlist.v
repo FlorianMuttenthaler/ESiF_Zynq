@@ -1,7 +1,7 @@
 // Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2018.3 (win64) Build 2405991 Thu Dec  6 23:38:27 MST 2018
-// Date        : Tue May 14 20:29:44 2019
+// Date        : Tue May 14 21:27:03 2019
 // Host        : DESKTOP-8PEEVNN running 64-bit major release  (build 9200)
 // Command     : write_verilog -force -mode funcsim -rename_top decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix -prefix
 //               decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_ zynq_pwm_module_0_0_sim_netlist.v
@@ -500,7 +500,7 @@ module decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_pwm_module
   CARRY4 pwm0__14_carry
        (.CI(1'b0),
         .CO({pwm0__14_carry_n_0,pwm0__14_carry_n_1,pwm0__14_carry_n_2,pwm0__14_carry_n_3}),
-        .CYINIT(1'b1),
+        .CYINIT(1'b0),
         .DI({pwm0__14_carry_i_1_n_0,pwm0__14_carry_i_2_n_0,pwm0__14_carry_i_3_n_0,pwm0__14_carry_i_4_n_0}),
         .O(NLW_pwm0__14_carry_O_UNCONNECTED[3:0]),
         .S({pwm0__14_carry_i_5_n_0,pwm0__14_carry_i_6_n_0,pwm0__14_carry_i_7_n_0,pwm0__14_carry_i_8_n_0}));
