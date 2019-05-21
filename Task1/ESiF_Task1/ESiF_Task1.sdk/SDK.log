@@ -181,3 +181,4 @@ con
 ----------------End of Script----------------
 
 15:35:34 INFO  : Launch script is exported to file 'C:\GIT\ESiF_Zynq\Task1\ESiF_Task1\ESiF_Task1.sdk\.sdk\launch_scripts\xilinx_c-c++_application_(system_debugger)\system_debugger_using_debug_task1.elf_on_local.tcl'
+15:40:35 INFO  : Disconnected from the channel tcfchan#1.
