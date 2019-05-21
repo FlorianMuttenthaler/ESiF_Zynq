@@ -46,7 +46,7 @@ begin
     variable count: integer := 0;
     begin
         if rising_edge(clk) then
-            if (count < COUNT_MAX) then
+            if (count < (COUNT_MAX - 1)) then
                 if (count < to_integer(unsigned(duty_cycles))) then
                     pwm <= "11111111";
                 else
