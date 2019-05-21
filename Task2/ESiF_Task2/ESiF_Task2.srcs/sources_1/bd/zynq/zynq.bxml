@@ -2,10 +2,10 @@
 <Root MajorVersion="0" MinorVersion="36">
   <CompositeFile CompositeFileTopName="zynq" CanBeSetAsTop="false" CanDisplayChildGraph="true">
     <Description>Composite Fileset</Description>
-    <Generation Name="SYNTHESIS" State="GENERATED" Timestamp="1557861980"/>
-    <Generation Name="IMPLEMENTATION" State="GENERATED" Timestamp="1557861980"/>
-    <Generation Name="SIMULATION" State="GENERATED" Timestamp="1557861980"/>
-    <Generation Name="HW_HANDOFF" State="GENERATED" Timestamp="1557861980"/>
+    <Generation Name="SYNTHESIS" State="RESET" Timestamp="1558444515"/>
+    <Generation Name="IMPLEMENTATION" State="RESET" Timestamp="1558444515"/>
+    <Generation Name="SIMULATION" State="RESET" Timestamp="1558444515"/>
+    <Generation Name="HW_HANDOFF" State="RESET" Timestamp="1558444515"/>
     <FileCollection Name="SOURCES" Type="SOURCES">
       <File Name="ip\zynq_pwm_module_0_0\zynq_pwm_module_0_0.xci" Type="IP">
         <Instance HierarchyPath="pwm_module_0"/>

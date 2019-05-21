@@ -39,9 +39,10 @@ entity pwm_module is
 end pwm_module;
 
 architecture Behavioral of pwm_module is
-    constant COUNT_MAX : integer := 8;
+    constant COUNT_MAX : integer := 8; -- maximum number of counted ones of DIP switches (steps 12,5% in pwm calculation)
 begin
-
+    -- if count varibale is smaller than duty_cyles written by cpu, than set LED outputs 1. Else 0.
+    -- count variable is increasing until 8 (100%) in 12,5% steps at each clk rising edge. Recalculation after each period.
     count_proc: process (clk)
     variable count: integer := 0;
     begin
