@@ -184,6 +184,24 @@ architecture sample_arch of xillydemo is
       user_w_smb_data : IN std_logic_vector(7 DOWNTO 0);
       user_w_smb_open : IN std_logic);
   end component;
+  
+  component top_oled_0 IS
+      PORT (
+        clk : IN STD_LOGIC;
+        reset_i : IN STD_LOGIC;
+        ascii_data_i : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+        data_valid_i : IN STD_LOGIC;
+        data_consumed_o : OUT STD_LOGIC;
+        SDIN : OUT STD_LOGIC;
+        SCLK : OUT STD_LOGIC;
+        DC : OUT STD_LOGIC;
+        RES : OUT STD_LOGIC;
+        VBAT : OUT STD_LOGIC;
+        VDD : OUT STD_LOGIC;
+        dBtnU : IN STD_LOGIC;
+        dBTnD : IN STD_LOGIC
+      ); 
+  END component;
 
 -- Synplicity black box declaration
   attribute syn_black_box : boolean;
@@ -292,6 +310,21 @@ architecture sample_arch of xillydemo is
   signal MIO : std_logic_vector(53 DOWNTO 0);
   signal DDR_WEB : std_logic;
   
+  signal OLED_PIO: std_logic_vector(5 DOWNTO 0);
+  signal oled_reset: std_logic;
+  signal oled_up: std_logic;
+  signal oled_down: std_logic;
+  signal read_8_rden: std_logic;
+  signal read_8_empty: std_logic;
+  signal read_8_data: std_logic_vector(7 DOWNTO 0);
+  signal read_8_eof: std_logic;
+  signal read_8_open: std_logic;
+  
+  signal PS_GPIO_fake: std_logic_vector(55 DOWNTO 0);
+  signal OLED_PIO_fake: std_logic_vector(5 DOWNTO 0);
+  
+  
+  
 begin
   xillybus_ins : xillybus
     port map (
@@ -321,11 +354,16 @@ begin
 
       -- Ports related to /dev/xillybus_read_8
       -- FPGA to CPU signals:
-      user_r_read_8_rden => user_r_read_8_rden,
-      user_r_read_8_empty => user_r_read_8_empty,
-      user_r_read_8_data => user_r_read_8_data,
-      user_r_read_8_eof => user_r_read_8_eof,
-      user_r_read_8_open => user_r_read_8_open,
+      --user_r_read_8_rden => user_r_read_8_rden,
+      user_r_read_8_rden => OPEN,
+      --user_r_read_8_empty => user_r_read_8_empty,
+      user_r_read_8_empty => '0',
+      --user_r_read_8_data => user_r_read_8_data,
+      user_r_read_8_data => (others => '0'),
+      --user_r_read_8_eof => user_r_read_8_eof,
+      user_r_read_8_eof => '0',
+      --user_r_read_8_open => user_r_read_8_open,
+      user_r_read_8_open => OPEN,
 
       -- Ports related to /dev/xillybus_write_32
       -- CPU to FPGA signals:
@@ -400,7 +438,12 @@ begin
       DDR_VRN => DDR_VRN,
       DDR_VRP => DDR_VRP,
       MIO => MIO,
-      PS_GPIO => PS_GPIO,
+      PS_GPIO => PS_GPIO_fake,
+--      PS_GPIO(0) => PS_GPIO(0),
+--      PS_GPIO(6 DOWNTO 1) => OPEN,
+--      PS_GPIO(18 DOWNTO 7) => PS_GPIO(18 DOWNTO 7),
+--      PS_GPIO(19) => OPEN,
+--      PS_GPIO(55 DOWNTO 20) => PS_GPIO(55 DOWNTO 20),
       DDR_WEB => DDR_WEB,
       GPIO_LED => GPIO_LED,
       bus_clk => bus_clk,
@@ -485,13 +528,23 @@ begin
 --  8-bit loopback
 
   fifo_8 : fifo_8x2048
-    port map(
+--    port map(
+--      clk        => bus_clk,
+--      srst       => reset_8,
+--      din        => user_w_write_8_data,
+--      wr_en      => user_w_write_8_wren,
+--      rd_en      => user_r_read_8_rden,
+--      dout       => user_r_read_8_data,
+--      full       => user_w_write_8_full,
+--      empty      => user_r_read_8_empty
+--      );
+   port map(
       clk        => bus_clk,
       srst       => reset_8,
       din        => user_w_write_8_data,
       wr_en      => user_w_write_8_wren,
-      rd_en      => user_r_read_8_rden,
-      dout       => user_r_read_8_data,
+      rd_en      => read_8_rden,
+      dout       => read_8_data,
       full       => user_w_write_8_full,
       empty      => user_r_read_8_empty
       );
@@ -538,5 +591,44 @@ begin
       user_w_smb_data => user_w_smb_data,
       user_w_smb_open => user_w_smb_open
       );
-  
+      
+   top_oled_0_0 : top_oled_0
+      PORT map(
+        clk => bus_clk,
+        reset_i => oled_reset,
+        ascii_data_i => read_8_data,
+        data_valid_i => read_8_rden,
+        data_consumed_o => OPEN,
+        SDIN => OLED_PIO(5),
+        SCLK => OLED_PIO(4),
+        DC => OLED_PIO(3),
+        RES => OLED_PIO(2),
+        VBAT => OLED_PIO(0),
+        VDD => OLED_PIO(1),
+        dBtnU => oled_up,
+        dBTnD => oled_down
+      ); 
+
+--top_oled_0_0 : top_oled_0
+--      PORT map(
+--        clk => bus_clk,
+--        reset_i => PS_GPIO(19),
+--        ascii_data_i => read_8_data,
+--        data_valid_i => read_8_rden,
+--        data_consumed_o => OPEN,
+--        SDIN => PS_GPIO(6),
+--        SCLK => PS_GPIO(5),
+--        DC => PS_GPIO(4),
+--        RES => PS_GPIO(3),
+--        VBAT => PS_GPIO(1),
+--        VDD => PS_GPIO(2),
+--        dBtnU => '1',
+--        dBTnD => '0'
+--      ); 
+
+    PS_GPIO_fake(55 DOWNTO 0) <= PS_GPIO(55 DOWNTO 24) & "000" & PS_GPIO(20 DOWNTO 7) & OLED_PIO_fake(5 DOWNTO 0) & PS_GPIO(0 DOWNTO 0);
+    OLED_PIO(5 DOWNTO 0) <= PS_GPIO(6 DOWNTO 1);
+    oled_reset <= PS_GPIO(23);
+    oled_down <= PS_GPIO(22);
+    oled_up <= PS_GPIO(21);
 end sample_arch;
