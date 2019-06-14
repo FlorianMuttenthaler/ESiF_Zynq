@@ -8,9 +8,9 @@ entity xillydemo is
     -- For Vivado, delete the port declarations for PS_CLK, PS_PORB and
     -- PS_SRSTB, and uncomment their declarations as signals further below.
 
-    PS_CLK : IN std_logic;
-    PS_PORB : IN std_logic;
-    PS_SRSTB : IN std_logic;
+    -- PS_CLK : IN std_logic;
+    -- PS_PORB : IN std_logic;
+    -- PS_SRSTB : IN std_logic;
     clk_100 : IN std_logic;
     otg_oc : IN std_logic;
     PS_GPIO : INOUT std_logic_vector(55 DOWNTO 0);
@@ -288,9 +288,9 @@ architecture sample_arch of xillydemo is
   -- implementation, but has no practical significance, as these pads are
   -- completely unrelated to the FPGA bitstream.
 
-  -- signal PS_CLK :  std_logic;
-  -- signal PS_PORB :  std_logic;
-  -- signal PS_SRSTB :  std_logic;
+  signal PS_CLK :  std_logic;
+  signal PS_PORB :  std_logic;
+  signal PS_SRSTB :  std_logic;
   signal DDR_Addr : std_logic_vector(14 DOWNTO 0);
   signal DDR_BankAddr : std_logic_vector(2 DOWNTO 0);
   signal DDR_CAS_n : std_logic;
@@ -310,21 +310,37 @@ architecture sample_arch of xillydemo is
   signal MIO : std_logic_vector(53 DOWNTO 0);
   signal DDR_WEB : std_logic;
   
+  -- signal declaration for gluelogic
+  type state_type is 
+  (
+    FIFO_EMPTY, 
+    FIFO_READ, 
+	OLED_DONE
+  ); -- 
+  signal state, state_next : state_type := FIFO_EMPTY;
+
   signal OLED_PIO: std_logic_vector(5 DOWNTO 0);
+  signal oled_data_consumed: std_logic;
+  signal oled_valid: std_logic;
+  signal oled_valid_next: std_logic;
   signal oled_reset: std_logic;
   signal oled_up: std_logic;
   signal oled_down: std_logic;
   signal read_8_rden: std_logic;
+  signal read_8_rden_next: std_logic;
   signal read_8_empty: std_logic;
   signal read_8_data: std_logic_vector(7 DOWNTO 0);
   signal read_8_eof: std_logic;
   signal read_8_open: std_logic;
   
+  -- signal declaration needed for configuration in xdc file
   signal PS_GPIO_fake: std_logic_vector(55 DOWNTO 0);
   signal OLED_PIO_fake: std_logic_vector(5 DOWNTO 0);
+  signal LED_FAKE: std_logic_vector(2 downto 0);
+  signal BTN_FAKE: std_logic_vector(2 downto 0);
   
-  
-  
+ -- signal stateleds: std_logic_vector(2 downto 0); -- debug purpose
+   
 begin
   xillybus_ins : xillybus
     port map (
@@ -438,12 +454,7 @@ begin
       DDR_VRN => DDR_VRN,
       DDR_VRP => DDR_VRP,
       MIO => MIO,
-      PS_GPIO => PS_GPIO_fake,
---      PS_GPIO(0) => PS_GPIO(0),
---      PS_GPIO(6 DOWNTO 1) => OPEN,
---      PS_GPIO(18 DOWNTO 7) => PS_GPIO(18 DOWNTO 7),
---      PS_GPIO(19) => OPEN,
---      PS_GPIO(55 DOWNTO 20) => PS_GPIO(55 DOWNTO 20),
+      PS_GPIO => PS_GPIO_fake, -- connect to other signal
       DDR_WEB => DDR_WEB,
       GPIO_LED => GPIO_LED,
       bus_clk => bus_clk,
@@ -528,30 +539,20 @@ begin
 --  8-bit loopback
 
   fifo_8 : fifo_8x2048
---    port map(
---      clk        => bus_clk,
---      srst       => reset_8,
---      din        => user_w_write_8_data,
---      wr_en      => user_w_write_8_wren,
---      rd_en      => user_r_read_8_rden,
---      dout       => user_r_read_8_data,
---      full       => user_w_write_8_full,
---      empty      => user_r_read_8_empty
---      );
    port map(
       clk        => bus_clk,
       srst       => reset_8,
       din        => user_w_write_8_data,
       wr_en      => user_w_write_8_wren,
-      rd_en      => read_8_rden,
-      dout       => read_8_data,
+      rd_en      => read_8_rden, -- signal to oled
+      dout       => read_8_data, -- signal to oled
       full       => user_w_write_8_full,
       empty      => user_r_read_8_empty
       );
 
-    reset_8 <= not (user_w_write_8_open or user_r_read_8_open);
+  reset_8 <= not (user_w_write_8_open or user_r_read_8_open);
 
-    user_r_read_8_eof <= '0';
+  user_r_read_8_eof <= '0';
 
   audio_ins : i2s_audio
     port map(
@@ -592,43 +593,78 @@ begin
       user_w_smb_open => user_w_smb_open
       );
       
-   top_oled_0_0 : top_oled_0
-      PORT map(
-        clk => bus_clk,
-        reset_i => oled_reset,
-        ascii_data_i => read_8_data,
-        data_valid_i => read_8_rden,
-        data_consumed_o => OPEN,
-        SDIN => OLED_PIO(5),
-        SCLK => OLED_PIO(4),
-        DC => OLED_PIO(3),
-        RES => OLED_PIO(2),
-        VBAT => OLED_PIO(0),
-        VDD => OLED_PIO(1),
-        dBtnU => oled_up,
-        dBTnD => oled_down
-      ); 
+  top_oled_0_0 : top_oled_0
+    PORT map(
+      clk => bus_clk,
+      reset_i => oled_reset,
+      ascii_data_i => read_8_data,
+      data_valid_i => oled_valid,
+	  data_consumed_o => oled_data_consumed,
+      SDIN => OLED_PIO(5),
+      SCLK => OLED_PIO(4),
+      DC => OLED_PIO(3),
+      RES => OLED_PIO(2),
+      VBAT => OLED_PIO(0),
+      VDD => OLED_PIO(1),
+      dBtnU => oled_up,
+      dBTnD => oled_down
+    ); 
 
---top_oled_0_0 : top_oled_0
---      PORT map(
---        clk => bus_clk,
---        reset_i => PS_GPIO(19),
---        ascii_data_i => read_8_data,
---        data_valid_i => read_8_rden,
---        data_consumed_o => OPEN,
---        SDIN => PS_GPIO(6),
---        SCLK => PS_GPIO(5),
---        DC => PS_GPIO(4),
---        RES => PS_GPIO(3),
---        VBAT => PS_GPIO(1),
---        VDD => PS_GPIO(2),
---        dBtnU => '1',
---        dBTnD => '0'
---      ); 
+  sync_oled : process (bus_clk, oled_reset)
+  begin
+    if(oled_reset = '1') then
+      -- Reset signals, set to defaults
+      state <= FIFO_EMPTY;
+      read_8_rden <= '0';
+      oled_valid <= '0';
+    elsif(rising_edge(bus_clk)) then
+      state <= state_next; 
+      read_8_rden <= read_8_rden_next;
+      oled_valid <= oled_valid_next; 
+    end if;
+  
+  end process sync_oled;
+  
+  oled_proc: process (state)
+  begin
+    -- prevent latches
+    state_next <= state;
+    read_8_rden_next <= read_8_rden;
+    oled_valid_next <= oled_valid;
+    -- stateleds <= "000"; -- debug purpose
+    
+    case state is
+      when FIFO_EMPTY =>
+        if(user_r_read_8_empty = '0') then -- wait until data in fifo
+          read_8_rden_next <= '1'; -- Read Fifo data
+          state_next <= FIFO_READ;
+        end if;
+        -- stateleds <= "001" after 500 ms; -- debug purpose
+        
+      when FIFO_READ =>
+        oled_valid_next <= '1'; -- set oled data valid
+        state_next <= OLED_DONE;
+        -- stateleds <= "010" after 500 ms; -- debug purpose  
+        
+      when OLED_DONE =>
+        if(oled_data_consumed = '1') then -- wait until data is consumed from oled
+          state_next <= FIFO_EMPTY;
+        end if;
+        -- stateleds <= "100" after 500 ms; -- debug purpose
+        
+      when others =>
+        state_next <= FIFO_EMPTY;
+            
+    end case;
+       
+  end process oled_proc;
 
-    PS_GPIO_fake(55 DOWNTO 0) <= PS_GPIO(55 DOWNTO 24) & "000" & PS_GPIO(20 DOWNTO 7) & OLED_PIO_fake(5 DOWNTO 0) & PS_GPIO(0 DOWNTO 0);
-    OLED_PIO(5 DOWNTO 0) <= PS_GPIO(6 DOWNTO 1);
-    oled_reset <= PS_GPIO(23);
-    oled_down <= PS_GPIO(22);
-    oled_up <= PS_GPIO(21);
+  -- Connect signals to PS_GPIO, needed for configuration in xdc file
+  PS_GPIO_fake(55 DOWNTO 0) <= PS_GPIO(55 DOWNTO 24) & BTN_FAKE(2 downto 0) & PS_GPIO(20 DOWNTO 10) & LED_FAKE(2 downto 0) & OLED_PIO_fake(5 DOWNTO 0) & PS_GPIO(0 DOWNTO 0);
+  PS_GPIO(6 DOWNTO 1) <= OLED_PIO(5 DOWNTO 0); 
+  oled_reset <= PS_GPIO(23); -- Reset button
+  oled_down <= PS_GPIO(22); -- OLED On button
+  oled_up <= PS_GPIO(21); -- OLED off button
+  -- PS_GPIO(9 downto 7) <= stateleds(2 downto 0); -- debug purpose
+
 end sample_arch;
